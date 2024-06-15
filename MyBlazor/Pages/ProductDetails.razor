@@ -1,0 +1,33 @@
+﻿@page "/product/{slug}"
+@using MyBlazor.Libraries.Product;
+@using MyBlazor.Libraries.Product.Models;
+@inject IProductService productService
+
+@if (Product != null)
+{
+    <PageTitle>@Product.Name</PageTitle>
+}
+
+<div class="row">
+    @if (Product == null)
+    {
+        <div class="alert alert-warning">
+            <h2>محصول مورد نظر پیدا نشد</h2>
+        </div>
+    }
+    else
+    {
+        <h2>@Product.Name</h2>
+        <hr />
+        <img src="/Images/bubbles-gumball-apron-black.jpg" />
+        <p>قیمت : @Product.Price</p>
+    }
+</div>
+<div class="row">
+    <h2>دیگر محصولات ما</h2>
+    <hr/>
+    @foreach (var product in ListProduct)
+    {
+        <ProductItem Product="product" />
+    }
+</div>
