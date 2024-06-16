@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using MyBlazor.Libraries.Product.Models;
 
-namespace MyBlazor.Libraries.Storge
+namespace MyBlazor.Libraries.Storage
 {
-	public interface IStorgeService
-	{
-		IList<ProductModel> products { get; }
-	}
+    public interface IStorgeService
+    {
+        IList<ProductModel> Products { get; }
+    }
 }
