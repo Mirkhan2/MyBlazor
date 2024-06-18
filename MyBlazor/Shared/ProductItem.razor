@@ -1,0 +1,36 @@
+﻿@using MyBlazor.Libraries.Product.Models;
+@using MyBlazor.Libraries.ShoppingCart;
+
+@inject IShoppingCartService shoppingCartService
+@implements IProductAddToCart
+
+<div class="card col-3 m-2" style="width: 18rem;padding:0">
+    <img src="/Images/@Product.Image" style="width:100%" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">
+            <a href="@Product.FullUrl">
+                @Product.Name
+            </a>
+        </h5>
+        <p class="card-text">قیمت : @Product.Price</p>
+        <a href="#" class="btn btn-primary">نمایش جزئیات</a>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public ProductModel? Product { get; set; }
+
+    public int? Quantity { get; set; }
+}
+
+@functions {
+    public void AddToCart()
+    {
+        if (Product != null)
+        {
+            shoppingCartService.AddProduct(Product, Quantity ?? 1);
+            Quantity = null;
+        }
+    }
+}
