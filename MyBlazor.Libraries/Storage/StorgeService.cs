@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using MyBlazor.Libraries.Product.Models;
+using MyBlazor.Libraries.ShoppingCartService.Models;
 
 namespace MyBlazor.Libraries.Storage
 {
-    public class StorageService : IStorgeService
+    public class StorageService : IStorageService
     {
         public IList<ProductModel> products { get; private set; }
+
+        public ShoppingCartModel ShoppingCart { get; private set; }
 
         public StorageService()
         {
             products = new List<ProductModel>();
+            ShoppingCart = new ShoppingCartModel();
 
             // Store a list of all the products for the online shop.
             AddProduct(new ProductModel("BUBBLES-GUMBALL-APRON", "A Gumball for Your Thoughts Apron", 24, "bubbles-gumball-apron-black.jpg"));

@@ -1,17 +1,12 @@
 ﻿using MyBlazor.Libraries.Product.Models;
-using MyBlazor.Libraries.ShoppingCart.Models;
-using MyBlazor.Libraries.Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MyBlazor.Libraries.ShoppingCartService.Models;
+
 
 namespace MyBlazor.Libraries.ShoppingCart
 {
     public class ShoppingCartService : IShoppingCartService
     {
-        private readonly IStorgeService _storageService;
+        private readonly IStorageService _storageService;
 
         public ShoppingCartService(IStorageService storageService)
         {
@@ -33,7 +28,7 @@ namespace MyBlazor.Libraries.ShoppingCart
 
         public int Count()
         {
-          return Get().Items.Count();
+            return Get().Items.Count();
         }
 
         public void DeleteProduct(ShoppingCartItemModel item)
@@ -53,7 +48,7 @@ namespace MyBlazor.Libraries.ShoppingCart
         public bool HasProduct(string sku)
         {
             var shoppingCart = Get();
-            return shoppingCart.Items.Any(i=> i.Product.Sku == sku);
+            return shoppingCart.Items.Any(i => i.Product.Sku == sku);
         }
     }
 }

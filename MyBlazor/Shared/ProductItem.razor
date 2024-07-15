@@ -13,11 +13,36 @@
             </a>
         </h5>
         <p class="card-text">قیمت : @Product.Price</p>
+        <div>
+
+            <input @bind="Quantity" type="number" placeholder="تعداد؟" class="form-control" />
+
+            <button class="btn btn-outline-success m-2"
+            @onclick="AddToCart">
+                @if (shoppingCartService.HasProduct(Product.Sku))
+                {
+                    <span>
+                        اضافه به سبد خرید
+                        @if (Quantity.HasValue)
+                        {
+                            <text> @Quantity بیشترش کن</text>
+                        }
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        اولین خریدت رو انجام بده
+                    </span>
+                }
+            </button>
+
+        </div>
         <a href="#" class="btn btn-primary">نمایش جزئیات</a>
     </div>
 </div>
 
-@code{
+@code {
     [Parameter]
     public ProductModel? Product { get; set; }
 

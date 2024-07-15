@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace MyBlazor.Libraries.Product.Models
 {
-	public interface IProductAddToCart
-	{
+    public interface IProductAddToCart
+    {
         public ProductModel? Product { get; set; }
         public int? Quantity { get; set; }
-        void  AddToCart(ProductModel? product);
+        void AddToCart();
     }
 }

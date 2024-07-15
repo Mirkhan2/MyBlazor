@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MyBlazor.Libraries.ShoppingCartService.Models
 {
-    public class ShoppingCartService
+    public class ShoppingCartModel
     {
         public IList<ShoppingCartItemService> Items { get; }
 
-        public ShoppingCartService() 
+        public ShoppingCartModel() 
         {
             Items = new List<ShoppingCartItemService>();
 
