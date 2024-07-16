@@ -15,12 +15,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.20" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MyBlazor.Libraries\MyBlazor.Libraries.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\ShoppingCart.cshtml" />
-  </ItemGroup>
-
 </Project>

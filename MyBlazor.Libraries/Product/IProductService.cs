@@ -12,5 +12,6 @@ namespace MyBlazor.Libraries.Product
         ProductModel? GetProduct(string sku);
         ProductModel? GetProductBySlug(string slug);
         IList<ProductModel> GetAll();
+        int GetTotalPageCount(int size,int page=1);
     }
 }

@@ -1,14 +1,19 @@
 ﻿@using MyBlazor.Libraries.Product;
 @using MyBlazor.Libraries.Product.Models;
+@inject NavigationManager navigationManager;
 
 @page "/"
 
 @inject IProductService productService
 
 <PageTitle>لیست محصولات</PageTitle>
+<HeadContent>
+    <meta ="description" content="LIste Product hastan" />
+</HeadContent>
 
 @if (Products?.Any() ?? false)
 {
+    <button @onclick="NavigateToShop">Click Me </button>
     <h2>آخرین محصولات ما</h2>
     <hr />
     <div class="row">
@@ -24,9 +29,16 @@
 @code {
     public IList<ProductModel>? Products { get; set; }
 
+
+    [Parameter,SupplyParameterFromQuery]
+    public int? Page { get; set; }
+    public int? TotalPageCount { get; set; }
+
     protected override void OnInitialized()
     {
-        Products = productService.GetAll();
+        Products = productService.GetAll(4, Page ?? 1);
+        TotalPageCount = productService.GetTotalPageCount(4);
         base.OnInitialized();
     }
+
 }

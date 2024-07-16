@@ -2,12 +2,16 @@
 @using MyBlazor.Libraries.Product;
 @using MyBlazor.Libraries.Product.Models;
 @using MyBlazor.Libraries.ShoppingCart;
+@using MyBlazor.Libraries.ShoppingCart.Models;
 @inject IProductService productService
 @inject IShoppingCartService shoppingCartService
 
 @if (Product != null)
 {
     <PageTitle>@Product.Name</PageTitle>
+    <HeadContent>
+        <meta name="description" content="@Product.Name"/>
+    </HeadContent>
 }
 
 
@@ -28,34 +32,41 @@ else
             <hr />
             <p class="text-success">قیمت : @Product.Price $</p>
             <div class="row m-3">
-                @if (shoppingCartService.Count() > 0)
+                @if(shoppingCartService.Count()>0)
                 {
                     <p>اقلام موجود در سبد خرید : @shoppingCartService.Count() می باشد</p>
                 }
+                <EditForm Model="productAddToCartModel" OnValidSubmit="AddToCart">
                 <div class="col-4">
-                    <input @bind="Quantity" @bind:event="oninput" type="number" placeholder="تعداد؟" class="form-control" />
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-outline-primary"
-                    @onclick="AddToCart">
-                        @if (shoppingCartService.HasProduct(Product.Sku))
-                        {
-                            <span>
-                                اضافه به سبد خرید
-                                @if (Quantity.HasValue)
+                    
+                        <DataAnnotationsValidator/>
+                        <ValidationMessage For="() => productAddToCartModel.Quantity"/>
+                        <InputNumber @bind-Value="productAddToCartModel.Quantity" class="form-control" placeholder="تعداد؟" />
+                    </div>
+                    <div class="col-3">
+                            <button class="btn btn-outline-primary">
+                                @if (shoppingCartService.HasProduct(Product.Sku))
                                 {
-                                    <text>@Quantity بیشترش کن</text>
+                                    <span>
+                                        اضافه به سبد خرید
+                                        @if (productAddToCartModel.Quantity.HasValue)
+                                        {
+                                            <text>@productAddToCartModel.Quantity بیشترش کن</text>
+                                        }
+                                    </span>
                                 }
-                            </span>
-                        }
-                        else
-                        {
-                            <span>
-                                اولین خریدت رو انجام بده
-                            </span>
-                        }
-                    </button>
-                </div>
+                                else
+                                {
+                                    <span>
+                                        اولین خریدت رو انجام بده
+                                    </span>
+                                }
+                            </button>
+                        </div>
+                   
+                
+               
+                </EditForm>
             </div>
             <ul>
                 @foreach (var product in ListProduct)
@@ -80,12 +91,15 @@ else
     public ProductModel? Product { get; set; }
     public IList<ProductModel>? ListProduct { get; set; }
 
-    public int? Quantity { get; set; }
 
 
     [Parameter]
     public string? slug { get; set; }
 
+    ProductAddToCartModel productAddToCartModel = new ProductAddToCartModel();
+
+    [CascadingParameter(Name = "ShoppingCartCountModel")]
+    private ShoppingCartCountModel? shoppingCartCountModel { get; set; }
 }
 
 @functions
@@ -113,8 +127,13 @@ else
     {
         if (Product != null)
         {
-            shoppingCartService.AddProduct(Product, Quantity ?? 1);
-            Quantity = null;
+            shoppingCartService.AddProduct(Product, productAddToCartModel.Quantity ?? 1);
+            productAddToCartModel.Quantity = null;
+
+            if (shoppingCartCountModel !=null)
+            {
+                shoppingCartCountModel.OnCountChange();
+            }
         }
     }
 }

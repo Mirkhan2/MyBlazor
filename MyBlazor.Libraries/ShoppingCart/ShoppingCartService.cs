@@ -3,7 +3,7 @@ using MyBlazor.Libraries.ShoppingCartService.Models;
 
 
 namespace MyBlazor.Libraries.ShoppingCart
-{
+{ 
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly IStorageService _storageService;
