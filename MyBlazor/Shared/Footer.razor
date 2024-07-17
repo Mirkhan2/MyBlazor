@@ -1,5 +1,7 @@
-﻿<nav class="navbar navbar-light bg-light">
-    <span class="navbar-brand mb-0 h1">کپی رایت فروشگاه تاپ لرن @year </span>
+﻿@inject IConfiguration Configuration
+
+<nav class="navbar navbar-light bg-light">
+    <span class="navbar-brand mb-0 h1">@Configuration["Footer"] @year </span>
 </nav>
 
 @code{

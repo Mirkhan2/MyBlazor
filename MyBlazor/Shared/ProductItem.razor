@@ -1,8 +1,11 @@
 ﻿@using MyBlazor.Libraries.Product.Models;
 @using MyBlazor.Libraries.ShoppingCart;
+@using MyBlazor.Libraries.ShoppingCart.Models;
+
 
 @inject IShoppingCartService shoppingCartService
 @implements IProductAddToCart
+@inject NavigationManager navigationManager;
 
 <div class="card col-3 m-2" style="width: 18rem;padding:0">
     <img src="/Images/@Product.Image" style="width:100%" class="card-img-top" alt="...">
@@ -56,6 +59,11 @@
         {
             shoppingCartService.AddProduct(Product, Quantity ?? 1);
             Quantity = null;
+            if (shoppingCartCountModel != null)
+            {
+                shoppingCartCountModel.OnCountChange();
+            }
+            navigationManager.NavigateTo("/cart");
         }
     }
 }

@@ -8,20 +8,35 @@
 
 <PageTitle>لیست محصولات</PageTitle>
 <HeadContent>
-    <meta ="description" content="LIste Product hastan" />
+    <meta name="description" content="LIste Product hastan" />
 </HeadContent>
 
 @if (Products?.Any() ?? false)
 {
-    <button @onclick="NavigateToShop">Click Me </button>
     <h2>آخرین محصولات ما</h2>
+    <a></a>
     <hr />
     <div class="row">
         @foreach (var product in Products)
         {
-            <ProductItem Product="product" />
+            <ProductDetails Product="product"/>
         }
     </div>
+    <div class="row">
+        @if (TotalPageCount >1 )
+        {
+            <ul>
+                @for (int page = 1; page < TotalPageCount; page++)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@navigationManager.GetUriWithQueryParameter("page",page)">@(page)</a>
+                    </li>
+                    
+                }
+            </ul>
+        }
+    </div>
+
 }
 
 
@@ -32,13 +47,23 @@
 
     [Parameter,SupplyParameterFromQuery]
     public int? Page { get; set; }
+
     public int? TotalPageCount { get; set; }
 
     protected override void OnInitialized()
-    {
-        Products = productService.GetAll(4, Page ?? 1);
-        TotalPageCount = productService.GetTotalPageCount(4);
+     {
+    //     Products = productService.GetAll(4, Page ?? 1);
+    //     TotalPageCount = productService.GetTotalPageCount(4);
         base.OnInitialized();
     }
 
+}
+@functions
+{
+    protected override void OnParametersSet()
+    {
+        Products = productService.GetAll(4, Page ?? 1);
+        TotalPageCount = productService.GetTotalPageCount(4); 
+        base.OnParametersSet();
+    }
 }
