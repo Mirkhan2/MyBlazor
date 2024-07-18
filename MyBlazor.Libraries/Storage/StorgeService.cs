@@ -4,7 +4,7 @@ using MyBlazor.Libraries.ShoppingCartService.Models;
 
 namespace MyBlazor.Libraries.Storage
 {
-    public class StorageService : IStorageService
+    public class StorageService : IStorgeService
     {
         public IList<ProductModel> products { get; private set; }
 

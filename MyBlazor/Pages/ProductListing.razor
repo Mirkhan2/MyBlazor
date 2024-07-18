@@ -1,15 +1,20 @@
 ﻿@using MyBlazor.Libraries.Product;
 @using MyBlazor.Libraries.Product.Models;
 @inject NavigationManager navigationManager;
-
+@inject IConfiguration configuration
 @page "/"
 
 @inject IProductService productService
 
 <PageTitle>لیست محصولات</PageTitle>
 <HeadContent>
-    <meta name="description" content="LIste Product hastan" />
+    <meta name="description" content="ایشون لیست محصولات هستند" />
 </HeadContent>
+
+<Ads Title="@configuration["Ads:Name"]"
+     Description="@configuration["Ads:Description"]"
+     Image="@configuration["Ads:Image"]"
+     Background="" />
 
 @if (Products?.Any() ?? false)
 {
@@ -19,24 +24,20 @@
     <div class="row">
         @foreach (var product in Products)
         {
-            <ProductDetails Product="product"/>
+            <ProductItem Product="product" />
         }
     </div>
     <div class="row">
-        @if (TotalPageCount >1 )
+        @if (TotalPageCount > 1)
         {
-            <ul>
-                @for (int page = 1; page < TotalPageCount; page++)
+            <ul class="pagination">
+                @for (int page = 1; page <= TotalPageCount; page++)
                 {
-                    <li class="page-item">
-                        <a class="page-link" href="@navigationManager.GetUriWithQueryParameter("page",page)">@(page)</a>
-                    </li>
-                    
+                    <li class="page-item"><a class="page-link" href="@navigationManager.GetUriWithQueryParameter("page",page)">@(page)</a></li>
                 }
             </ul>
         }
     </div>
-
 }
 
 
@@ -44,26 +45,31 @@
 @code {
     public IList<ProductModel>? Products { get; set; }
 
-
-    [Parameter,SupplyParameterFromQuery]
+    [Parameter, SupplyParameterFromQuery]
     public int? Page { get; set; }
 
     public int? TotalPageCount { get; set; }
 
     protected override void OnInitialized()
-     {
-    //     Products = productService.GetAll(4, Page ?? 1);
-    //     TotalPageCount = productService.GetTotalPageCount(4);
+    {
+
         base.OnInitialized();
     }
+
+
+
 
 }
 @functions
 {
     protected override void OnParametersSet()
     {
-        Products = productService.GetAll(4, Page ?? 1);
-        TotalPageCount = productService.GetTotalPageCount(4); 
+        //int pagesSize = int.Parse(configuration["ProductListing:PageSize"]);
+        var productConfig = configuration.GetSection("ProductListing");
+
+        var pageSize = productConfig.GetValue<int>("PageSize");
+        Products = productService.GetAll(pageSize, Page ?? 1);
+        TotalPageCount = productService.GetTotalPageCount(4);
         base.OnParametersSet();
     }
 }

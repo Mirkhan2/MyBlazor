@@ -4,52 +4,54 @@
 @inject IConfiguration _Configuration
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">
-        <img style="max-width:50px" src="@_Configuration["Sitelogo"]" />
-        @_Configuration["Title"]
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+	<a class="navbar-brand" href="#">
+		<img style="max-width:50px" src="@_Configuration["Sitelogo"]" />
+		@_Configuration["Title"]
+	</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <NavLink class="nav-link" Match="NavLinkMatch.All" href="/">خانه</NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink class="nav-link" Match="NavLinkMatch.All" href="/cart">
-                    سبد خرید (
-                    <span>
-                        @if (shoppingCartCountModel != null)
-                        {
-                            @shoppingCartCountModel.Count
-                        }
-                    </span>
-                    )
-                </NavLink>
-            </li>
-        </ul>
-    </div>
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<NavLink class="nav-link" Match="NavLinkMatch.All" href="/">خانه</NavLink>
+			</li>
+			<li class="nav-item">
+				<NavLink class="nav-link" Match="NavLinkMatch.All" href="/cart">
+					سبد خرید (
+					<span>
+						@if (shoppingCartCountModel != null)
+						{
+							@shoppingCartCountModel.Count
+						}
+					</span>
+					)
+				</NavLink>
+			</li>
+		</ul>
+	</div>
 </nav>
+
+
 
 @code
 {
-    [CascadingParameter(Name = "ShoppingCartCountModel")]
-    private ShoppingCartCountModel? shoppingCartCountModel { get; set; }
+	[CascadingParameter(Name = "ShoppingCartCountModel")]
+	private ShoppingCartCountModel? shoppingCartCountModel { get; set; }
 
-    protected override void OnInitialized()
-    {
+	protected override void OnInitialized()
+	{
 
-        if (shoppingCartCountModel != null)
-        {
-            shoppingCartCountModel.CountChange += () =>
-            {
-                shoppingCartCountModel.Count = shoppingCartService.Count();
-                StateHasChanged();
-            };
-        }
+		if (shoppingCartCountModel != null)
+		{
+			shoppingCartCountModel.CountChange += () =>
+			{
+				shoppingCartCountModel.Count = shoppingCartService.Count();
+				StateHasChanged();
+			};
+		}
 
-        base.OnInitialized();
-    }
+		base.OnInitialized();
+	}
 }
