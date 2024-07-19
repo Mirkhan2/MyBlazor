@@ -13,10 +13,19 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.20" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.20" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.21" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MyBlazor.Libraries\MyBlazor.Libraries.csproj" />
+    <ProjectReference Include="..\MyBlazorEshop.Libraries.Shared\MyBlazorEshop.Libraries.Shared.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<None Update="Shared/NavMenu.razor.css" CssScope="nav-menu" />
+	</ItemGroup>
 
+	<PropertyGroup>
+		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+	</PropertyGroup>
+	
 </Project>

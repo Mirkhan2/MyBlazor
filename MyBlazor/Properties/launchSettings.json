@@ -8,15 +8,17 @@
     }
   },
   "profiles": {
-    "MyBlazor": {
+    "MyBlazorApp": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "applicationUrl": "https://localhost:7017;http://localhost:5142",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+            // "ASPNETCORE_ENVIRONMENT": "Staging",
+            //"ASPNETCORE_ENVIRONMENT": "Production"
+        }
     },
     "IIS Express": {
       "commandName": "IISExpress",

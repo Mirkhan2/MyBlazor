@@ -15,7 +15,7 @@
                 @Product.Name
             </a>
         </h5>
-        <p class="card-text">قیمت : @Product.Price</p>
+        <p class="card-text">قیمت : @Product.Price.ToString("c")</p>
         <div>
  
             <input @bind="Quantity" type="number" placeholder="تعداد؟" class="form-control" />

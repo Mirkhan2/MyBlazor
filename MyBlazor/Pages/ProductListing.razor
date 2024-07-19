@@ -2,6 +2,8 @@
 @using MyBlazor.Libraries.Product.Models;
 @inject NavigationManager navigationManager;
 @inject IConfiguration configuration
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@inject IWebAssemblyHostEnvironment _env
 @page "/"
 
 @inject IProductService productService
@@ -10,6 +12,7 @@
 <HeadContent>
     <meta name="description" content="ایشون لیست محصولات هستند" />
 </HeadContent>
+
 
 <Ads Title="@configuration["Ads:Name"]"
      Description="@configuration["Ads:Description"]"
