@@ -4,11 +4,13 @@ using MyBlazor.Libraries.ShoppingCartService.Models;
 
 namespace MyBlazor.Libraries.Storage
 {
-    public class StorageService : IStorgeService
+    public class StorageService : IStorageService
     {
         public IList<ProductModel> products { get; private set; }
 
         public ShoppingCartModel ShoppingCart { get; private set; }
+
+        public IList<ProductModel> Products => throw new NotImplementedException();
 
         public StorageService()
         {

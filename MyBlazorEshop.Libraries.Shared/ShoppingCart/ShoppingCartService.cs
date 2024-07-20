@@ -1,6 +1,6 @@
 ﻿using MyBlazor.Libraries.Product.Models;
 using MyBlazor.Libraries.ShoppingCartService.Models;
-
+using MyBlazor.Libraries.Storage;
 
 namespace MyBlazor.Libraries.ShoppingCart
 { 

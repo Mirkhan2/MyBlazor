@@ -31,7 +31,7 @@ if (responseP.IsSuccessStatusCode)
     builder.Configuration.AddJsonStream(streamP);
 }
 
-builder.Services.AddSingleton<IStorgeService, StorageService>();
+builder.Services.AddSingleton<IStorageService, StorageService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
 //zaban pishfarz karbar <englisch>

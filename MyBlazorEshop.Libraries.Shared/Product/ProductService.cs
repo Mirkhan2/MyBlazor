@@ -5,7 +5,7 @@ namespace MyBlazor.Libraries.Product
 {
     public class ProductService : IProductService
     {
-        private readonly IStorgeService _storageService;
+        private readonly IStorageService _storageService;
 
         public ProductService(IStorageService storageService)
         {
