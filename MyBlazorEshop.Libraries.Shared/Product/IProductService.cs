@@ -5,9 +5,12 @@ namespace MyBlazor.Libraries.Product
 {
     public interface IProductService
     {
+        ProductModel? Get(string sku);
         ProductModel? GetProduct(string sku);
         ProductModel? GetProductBySlug(string slug);
         IList<ProductModel> GetAll();
-        int GetTotalPageCount(int size,int page=1);
+        IList<ProductModel> GetAll(int size, int page = 1);
+
+        int GetTotalPageCount(int size, int page = 1);
     }
 }

@@ -4,6 +4,7 @@
 @inject IConfiguration configuration
 @using Microsoft.AspNetCore.Components.WebAssembly.Hosting
 @inject IWebAssemblyHostEnvironment _env
+@inject HttpClient _HttpClient
 @page "/"
 
 @inject IProductService productService
@@ -65,14 +66,19 @@
 }
 @functions
 {
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSet()
     {
         //int pagesSize = int.Parse(configuration["ProductListing:PageSize"]);
         var productConfig = configuration.GetSection("ProductListing");
-
         var pageSize = productConfig.GetValue<int>("PageSize");
-        Products = productService.GetAll(pageSize, Page ?? 1);
-        TotalPageCount = productService.GetTotalPageCount(4);
-        base.OnParametersSet();
+
+        Products = await _HttpClient.GetFromJsonAsunc<int>(
+            string.Format(
+                "/api/Product/total-page-count?size={0}",
+                pageSize
+            )
+        );
+
+       await base.OnParametersSet();
     }
 }

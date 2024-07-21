@@ -11,12 +11,13 @@ namespace MyBlazor.Libraries.Product
         {
             this._storageService = storageService;
         }
-        public IList<ProductModel> GetAll(int size , int page =1)
+
+        public IList<ProductModel> GetAll(int size, int page = 1)
         {
             var skip = size * (page - 1);
             return _storageService.Products.Skip(skip).Take(size).ToList();
         }
-       
+
         public ProductModel? GetProduct(string sku)
         {
             return _storageService.Products.FirstOrDefault(x => x.Sku == sku);
@@ -36,6 +37,12 @@ namespace MyBlazor.Libraries.Product
         {
             var count = _storageService.Products.Count();
             return count > 0 ? (int)Math.Ceiling((decimal)count / size) : 1;
+
+        }
+
+        public ProductModel? Get(string sku)
+        {
+            return _storageService.Products.FirstOrDefault(p => p.Sku == sku);
 
         }
     }
