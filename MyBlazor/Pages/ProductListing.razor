@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Hosting
 @inject IWebAssemblyHostEnvironment _env
 @inject HttpClient _HttpClient
+@inject ILogger<ProductListing> logger
 @page "/"
 
 @inject IProductService productService
@@ -66,19 +67,32 @@
 }
 @functions
 {
-    protected override async Task OnParametersSet()
+
+    protected override async Task OnParametersSetAsync()
     {
-        //int pagesSize = int.Parse(configuration["ProductListing:PageSize"]);
+
         var productConfig = configuration.GetSection("ProductListing");
         var pageSize = productConfig.GetValue<int>("PageSize");
 
-        Products = await _HttpClient.GetFromJsonAsunc<int>(
+        Products = await _HttpClient.GetFromJsonAsync<IList<ProductModel>>(
+        string.Format(
+            "/api/Product?size={0}&page={1}",
+            pageSize,
+            Page??1
+        )
+        );
+        TotalPageCount = await _HttpClient.GetFromJsonAsync<int>(
             string.Format(
                 "/api/Product/total-page-count?size={0}",
-                pageSize
-            )
+                pageSize)
         );
+        logger.LogInformation("Begin product listing");
+        logger.LogError("Error in Listoing");
+       // **logger.Log("")
+        await base.OnParametersSetAsync();
+        
 
-       await base.OnParametersSet();
+            
+        
     }
 }

@@ -3,14 +3,21 @@
 @using MyBlazor.Libraries.Product.Models;
 @using MyBlazor.Libraries.ShoppingCart;
 @using MyBlazor.Libraries.ShoppingCart.Models;
-@inject IProductService productService
-@inject IShoppingCartService shoppingCartService
+@using MyBlazorEshop.Shared.Models
+@using MyEshopLibraries.Shared.ShoppingCart.Models;
+@using System.Text;
+@using System.Text.Json;
+
+@inject HttpClient _httpClient
+@inject NavigationManager navigationManager;
+@inject IConfiguration configuration
+@inject ILoggerFactory LoggerFactory
 
 @if (Product != null)
 {
     <PageTitle>@Product.Name</PageTitle>
     <HeadContent>
-        <meta name="description" content="@Product.Name"/>
+        <meta name="description" content="@Product.Name" />
     </HeadContent>
 }
 
@@ -32,40 +39,40 @@ else
             <hr />
             <p class="text-success">قیمت : @Product.Price $</p>
             <div class="row m-3">
-                @if(shoppingCartService.Count()>0)
+                @if (HasProductInCart)
                 {
-                    <p>اقلام موجود در سبد خرید : @shoppingCartService.Count() می باشد</p>
+                    <p>اقلام موجود در سبد خرید : @productAddToCartModel.Quantity می باشد</p>
                 }
-                <EditForm Model="productAddToCartModel" OnValidSubmit="AddToCart">
-                <div class="col-4">
-                    
-                        <DataAnnotationsValidator/>
-                        <ValidationMessage For="() => productAddToCartModel.Quantity"/>
+                <EditForm Model="productAddToCartModel" OnValidSubmit="AddToCartAsync">
+                    <div class="col-4">
+
+                        <DataAnnotationsValidator />
+                        <ValidationMessage For="() => productAddToCartModel.Quantity" />
                         <InputNumber @bind-Value="productAddToCartModel.Quantity" class="form-control" placeholder="تعداد؟" />
                     </div>
                     <div class="col-3">
-                            <button class="btn btn-outline-primary">
-                                @if (shoppingCartService.HasProduct(Product.Sku))
-                                {
-                                    <span>
-                                        اضافه به سبد خرید
-                                        @if (productAddToCartModel.Quantity.HasValue)
-                                        {
-                                            <text>@productAddToCartModel.Quantity بیشترش کن</text>
-                                        }
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span>
-                                        اولین خریدت رو انجام بده
-                                    </span>
-                                }
-                            </button>
-                        </div>
-                   
-                
-               
+                        <button class="btn btn-outline-primary">
+                            @if (HasProductInCart)
+                            {
+                                <span>
+                                    اضافه به سبد خرید
+                                    @if (productAddToCartModel.Quantity.HasValue)
+                                    {
+                                        <text>@productAddToCartModel.Quantity بیشترش کن</text>
+                                    }
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    اولین خریدت رو انجام بده
+                                </span>
+                            }
+                        </button>
+                    </div>
+
+
+
                 </EditForm>
             </div>
             <ul>
@@ -89,6 +96,9 @@ else
 
 @code {
     public ProductModel? Product { get; set; }
+
+    private bool HasProductInCart { get; set; }
+
     public IList<ProductModel>? ListProduct { get; set; }
 
 
@@ -104,36 +114,80 @@ else
 
 @functions
 {
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        ListProduct = productService.GetAll();
-        if (!string.IsNullOrEmpty(slug))
-        {
-            Product = productService.GetProductBySlug(slug);
-        }
-        base.OnInitialized();
+        ListProduct = await _httpClient.GetFromJsonAsync<IList<ProductModel>>(
+            "/api/product");
+        await base.OnInitializedAsync();
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (!string.IsNullOrEmpty(slug))
         {
-            Product = productService.GetProductBySlug(slug);
+            Product = await _httpClient.GetFromJsonAsync<ProductModel>(
+                "/api/product/by-slug/" + slug);
+            var logger = LoggerFactory.CreateLogger<ProductDetails>();
+            var logger1 = LoggerFactory.CreateLogger<ProductModel>();
+            logger.LogInformation("Product is set");
+            logger1.LogInformation("ProductModel");
+            if (Product != null)
+            {
+                HasProductInCart = await _httpClient.GetFromJsonAsync<bool>(
+                    "/api/ShoppingCart/has-product/" + Product.Sku
+                    );
+            }
         }
-        base.OnParametersSet();
+
     }
 
-    public void AddToCart()
+    private async Task AddToCartAsync()
     {
         if (Product != null)
         {
-            shoppingCartService.AddProduct(Product, productAddToCartModel.Quantity ?? 1);
+            if (!HasProductInCart)
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, "/api/ShoppingCart");
+                request.Headers.Add("Authorization", Configuration.GetValue<string>("ApiKey"));
+                request.Content = new StringContent(
+                    JsonSerializer.Serialize(
+                        new ShoppingCartAddModel
+                            {
+                                ProductSku = Product.Sku,
+                                Quantity = productAddToCartModel ?? 1
+                            }
+                    ), Encoding.UTF8, "application/json");
+                await _httpClient.SendAsync(request);
+                //tabdil object be json = serialize
+
+            }
+            else
+            {
+
+                var request = new HttpRequestMessage(HttpMethod.Put, "/api/ShoppingCart");
+                request.Headers.Add("Authorization", Configuration.GetValue<string>("ApiKey"));
+                request.Content = new StringContent(
+                    JsonSerializer.Serialize(
+                        new ShoppingCartAddModel
+                            {
+                                ProductSku = Product.Sku,
+                                Quantity = productAddToCartModel ?? 1
+                            }
+                    ), Encoding.UTF8, "application/json");
+                await _httpClient.SendAsync(request);
+                //tabdil object be json = serialize
+            }
+            HasProductInCart = await _httpClient.GetFromJsonAsync<bool>(
+                "/api/ShoppingCart/has-product/" + Product.Sku
+                );
+
             productAddToCartModel.Quantity = null;
 
-            if (shoppingCartCountModel !=null)
+            if (shoppingCartCountModel != null)
             {
                 shoppingCartCountModel.OnCountChange();
             }
         }
+        navigationManager.NavigateTo("/cart");
     }
 }
